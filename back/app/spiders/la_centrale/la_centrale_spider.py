@@ -1,5 +1,5 @@
 from functools import reduce
-from typing import Iterable, List
+from typing import Iterable
 from scrapy import Selector, Spider
 from scrapy.http import Request
 
@@ -27,11 +27,10 @@ class LaCentraleSpider(Spider):
         ).getall()
         data = []
         for bar in chartBars:
-            data.append(parse_style(html=bar, elements=["height"]))
-        data_as_list = sum(data, [])
-        percentage_max_size = reduce(lambda x, y: float(x) + float(y), data_as_list, 0)
+            data.append(parse_style(html=bar, elements=["height"])[0]["height"])
+        percentage_max_size = reduce(lambda x, y: float(x) + float(y), data, 0)
         price_percentage_list = list(
-            map(lambda x: (float(x) * 100) / percentage_max_size, data_as_list)
+            map(lambda x: (float(x) * 100) / percentage_max_size, data)
         )
         _average_price = 0
         _median = 0
