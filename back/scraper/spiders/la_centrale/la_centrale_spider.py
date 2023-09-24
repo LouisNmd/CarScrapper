@@ -3,7 +3,7 @@ from typing import Iterable
 from scrapy import Selector, Spider
 from scrapy.http import Request
 
-from app.helpers.dom_parser import parse_style
+from scraper.helpers.dom_parser import parse_style
 
 
 class LaCentraleSpider(Spider):

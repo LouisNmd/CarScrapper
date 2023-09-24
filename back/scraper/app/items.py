@@ -3,10 +3,10 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+import scraper
 
 
-class AppItem(scrapy.Item):
+class AppItem(scraper.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
