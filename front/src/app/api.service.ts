@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,12 +8,13 @@ export class ApiService {
 
   constructor() { }
 
-  //basePath: string = "http://127.0.0.1:8000/api/la-centrale/";
-  basePath: string = "http://141.145.197.98/api/la-centrale/";
+  path: string = "/la-centrale";
+
+  private get(path: string, args: string) {
+    return fetch(environment.api.url + path + args, {method: 'GET'})
+  }
 
   getLaCentrale(brand: string, model: string) {
-    return fetch(this.basePath + brand + "/" + model, {
-      method: 'GET'
-    })
+    return this.get(this.path, `/${brand}/${model}`)
   }
 }

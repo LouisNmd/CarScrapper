@@ -1,10 +1,2 @@
-<h1>{{brand.toUpperCase() + " " + model.toUpperCase()}}</h1>
-<!-- <p>Prix moyen: {{data?.average_price}}</p>
-<p>Prix médian: {{data?.median}}</p> -->
-<canvas
-    baseChart
-    class="chart"
-    [data]="lineChartData"
-    [type]="lineChartType"
-    [options]="lineChartOption"
-></canvas>
+<h1>{{ brand.toUpperCase() + " " + model.toUpperCase() }}</h1>
+<app-scraper-chart />
