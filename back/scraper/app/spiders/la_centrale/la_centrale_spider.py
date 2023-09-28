@@ -1,3 +1,4 @@
+from datetime import date
 from functools import reduce
 from typing import Iterable
 from scrapy import Selector, Spider
@@ -46,6 +47,7 @@ class LaCentraleSpider(Spider):
         stats = {}
         stats["average_price"] = round(_average_price, 2)
         stats["median"] = _median
+        stats["time"] = date.today()
         return stats
 
     def get_price_per_index(self, index: int):
