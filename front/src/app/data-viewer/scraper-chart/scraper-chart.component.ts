@@ -51,7 +51,7 @@ export class ScraperChartComponent {
   };
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-  data: any;
+  data: any[] = [];
   averagePriceList: any[] = [];
   medianPriceList: any[] = [];
   timeList: any[] = [];
@@ -76,7 +76,10 @@ export class ScraperChartComponent {
   }
 
   public setData(data: any) {
-    this.data = data;
+    this.data = data.sort((a: any, b: any) => {
+      +new Date(a.time) - +new Date(b.time);
+    });
+    console.log(this.data);
     this.averagePriceList = this.computeAveragePriceList(data);
     this.medianPriceList = this.computeMedianPriceList(data);
     this.timeList = this.getTimeList(data);
