@@ -1,4 +1,4 @@
-import { Component, Input, Output, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Chart, ChartConfiguration, ChartType } from 'chart.js';
 import Annotation from 'chartjs-plugin-annotation';
 import { BaseChartDirective } from 'ng2-charts';
@@ -43,11 +43,6 @@ export class ScraperChartComponent {
   };
   lineChartOption: ChartConfiguration['options'] = {
     responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
   };
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
@@ -76,10 +71,11 @@ export class ScraperChartComponent {
   }
 
   public setData(data: any) {
-    this.data = data.sort((a: any, b: any) => {
-      +new Date(a.time) - +new Date(b.time);
+    this.data = data.sort((x: any, y: any) => {
+      const xDate = new Date(x.time).getTime();
+      const yDate = new Date(y.time).getTime();
+      return xDate - yDate;
     });
-    console.log(this.data);
     this.averagePriceList = this.computeAveragePriceList(data);
     this.medianPriceList = this.computeMedianPriceList(data);
     this.timeList = this.getTimeList(data);

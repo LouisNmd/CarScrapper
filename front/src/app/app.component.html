@@ -1,4 +1,10 @@
-<h1>{{todayDate}}</h1>
+<app-header />
 
-<la-centrale brand="bmw" model="z3"></la-centrale>
-<la-centrale brand="mazda" model="mx5"></la-centrale>
+<mat-grid-list cols="2" rowHeight="1.5:1">
+  <mat-grid-tile>
+    <la-centrale brand="bmw" model="z3"></la-centrale>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <la-centrale brand="mazda" model="mx5"></la-centrale>
+  </mat-grid-tile>
+</mat-grid-list>
