@@ -6,7 +6,7 @@ from app.routers.la_centrale_router import router as la_centrale_router
 app = FastAPI()
 app.include_router(la_centrale_router)
 
-origins = ["http://localhost:4200"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,57 +1,38 @@
 from datetime import date
 from functools import reduce
+import functools
 from typing import Iterable
 from scrapy import Selector, Spider
 from scrapy.http import Request
 
-from app.helpers.dom_parser import parse_style
+from scraper.app.helpers.dom_parser import parse_style
 
 
 class LaCentraleSpider(Spider):
-    threadshold_2k = 15
-
     custom_settings = {
-        "FEEDS": {"data/%(name)s/%(name)s_%(time)s.json": {"format": "json"}}
+        "ITEM_PIPELINES": {
+            "scraper.app.pipelines.la_centrale_pipeline.LaCentralePipeline": 0
+        },
     }
 
-    def start_requests(
-        self, parse, brand: str, model: str, maxYear: str
-    ) -> Iterable[Request]:
-        url = "https://www.lacentrale.fr/listing?categories=46%2C45&makesModelsCommercialNames={0}%3A{1}&yearMax={2}".format(
-            brand, model, maxYear
-        )
-        yield Request(url=url, callback=parse)
+    prices_list = []
+    current_page = 1
 
-    def get_stats(self, response: Selector):
-        chartBars = response.xpath(
-            "//div[@class='minMaxChart__chartBars active']/*"
+    def start_requests(self, brand: str, model: str, maxYear: str) -> Iterable[Request]:
+        while self.current_page < 10:
+            url = f"https://www.lacentrale.fr/listing?categories=46%2C45&makesModelsCommercialNames={brand}%3A{model}&options=&page={self.current_page}&yearMax={maxYear}"
+            self.current_page += 1
+            yield Request(url=url, callback=self.parse)
+
+    def parse(self, response: Selector):
+        html_prices = response.xpath(
+            '//span[@class="Text_Text_text Vehiculecard_Vehiculecard_price Text_Text_subtitle2"]/text()'
         ).getall()
-        data = []
-        for bar in chartBars:
-            data.append(parse_style(html=bar, elements=["height"])[0]["height"])
-        percentage_max_size = reduce(lambda x, y: float(x) + float(y), data, 0)
-        price_percentage_list = list(
-            map(lambda x: (float(x) * 100) / percentage_max_size, data)
+        if len(html_prices) == 0:
+            return
+        prices = [x.replace(" ", "") for x in html_prices if x != " €"]
+        self.prices_list += prices
+        average_price = functools.reduce(lambda x, y: int(x) + int(y), prices) / len(
+            prices
         )
-        _average_price = 0
-        _median = 0
-        median_index = 0
-        for index, price_percentage in enumerate(price_percentage_list):
-            _average_price += self.get_price_per_index(index) * price_percentage
-
-            if _median < 50:
-                _median += price_percentage
-                median_index = index
-        _average_price /= 100
-        _median = self.get_price_per_index(median_index)
-        stats = {}
-        stats["average_price"] = round(_average_price, 2)
-        stats["median"] = _median
-        stats["time"] = date.today()
-        return stats
-
-    def get_price_per_index(self, index: int):
-        if index > self.threadshold_2k:
-            return 2000 * self.threadshold_2k + 5000 * (index - self.threadshold_2k)
-        else:
-            return 2000 * index
+        return {"average_price": average_price, "prices_list": self.prices_list}
