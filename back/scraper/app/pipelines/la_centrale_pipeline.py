@@ -23,12 +23,16 @@ class LaCentralePipeline(object):
         value = {
             "average_price": self.prices_sum / self.page_scrapped,
             "median": self.prices_list[int(len(self.prices_list) / 2)],
+            "time": str(self.get_current_date()),
         }
         with open(
-            f"data/{spider.name}/{spider.name}_{self.get_current_time()}.json",
+            f"data/{spider.name}/{spider.name}_{self.get_current_date_time()}.json",
             "w",
         ) as f:
             json.dump(value, f)
 
-    def get_current_time(self):
+    def get_current_date_time(self):
         return datetime.now().strftime("%Y-%m-%dT%H-%M-%S+00-00")
+
+    def get_current_date(self):
+        return datetime.now().strftime("%Y-%m-%d")
