@@ -1,7 +1,7 @@
 from typing import Iterable
 from scrapy.http import Request
 
-from scraper.app.spiders.la_centrale.la_centrale_spider import LaCentraleSpider
+from app.spiders.la_centrale.la_centrale_spider import LaCentraleSpider
 
 
 class LaCentraleMazdaMx5Spider(LaCentraleSpider):

@@ -5,14 +5,10 @@ from typing import Iterable
 from scrapy import Selector, Spider
 from scrapy.http import Request
 
-from scraper.app.helpers.dom_parser import parse_style
-
 
 class LaCentraleSpider(Spider):
     custom_settings = {
-        "ITEM_PIPELINES": {
-            "scraper.app.pipelines.la_centrale_pipeline.LaCentralePipeline": 0
-        },
+        "ITEM_PIPELINES": {"app.pipelines.la_centrale_pipeline.LaCentralePipeline": 0},
     }
 
     prices_list = []
